@@ -1,0 +1,41 @@
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+df=pd.read_csv('F:\\Secondpaper\\Random Forest\\Excercise_2.csv')
+X=df.drop('FLOOD',axis=1)
+y=df['FLOOD']
+X_train,X_test,y_train,y_test=train_test_split(X, y,test_size=0.2,random_state=42)
+RF=RandomForestClassifier(n_estimators=100,random_state=42)
+RF.fit(X_train,y_train)
+y_pred=RF.predict(X_test)
+y_pred_proba=RF.predict_proba(X_test)[:,1]
+n_runs = 20
+feature_importances = np.zeros((n_runs, X_train.shape[1]))
+for i in range(n_runs):
+    rf = RandomForestClassifier(
+        n_estimators=200,
+        max_depth=30,
+        random_state=i,  # 每次不同随机种子
+        class_weight='balanced'
+    )
+    rf.fit(X_train, y_train)
+    feature_importances[i, :] = rf.feature_importances_
+importance_mean = np.mean(feature_importances, axis=0)
+importance_std = np.std(feature_importances, axis=0)
+stability_df = pd.DataFrame({
+    'Feature': X_train.columns,
+    'Mean Importance': importance_mean,
+    'Std Importance': importance_std,
+    'CV (Std/Mean)': importance_std / importance_mean  # 变异系数
+}).sort_values('Mean Importance', ascending=False)
+print("\n特征重要性稳定性分析结果：")
+print(stability_df)
+plt.figure(figsize=(10, 6))
+plt.barh(stability_df['Feature'], stability_df['Mean Importance'], xerr=stability_df['Std Importance'])
+plt.gca().invert_yaxis()
+plt.xlabel('Mean Feature Importance')
+plt.title('Feature Importance Stability Analysis')
+plt.tight_layout()
+plt.show()
