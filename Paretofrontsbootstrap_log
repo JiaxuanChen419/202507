@@ -1,0 +1,79 @@
+import os
+import pandas as pd
+import numpy as np
+
+base_path = r"F:\Secondpaper\Major revision\bootstrap"
+rain_periods = ["0.5-year", "1-year", "3-year", "5-year", "10-year", "30-year"]
+scenarios = [f"S{i}" for i in range(1, 9)]
+objectives_names = ['LCC', 'Flood', 'Runoff']
+B = 1000
+
+output_dir = os.path.join(base_path, "bootstrap_results")
+os.makedirs(output_dir, exist_ok=True)
+
+dominant_summary = pd.DataFrame(columns=['Rainfall', 'Dominant_Scenario', 'Robustness_Index', 'Mean_CV'])
+
+for period in rain_periods:
+    robustness_dict = {} 
+    mean_cv_dict = {}    
+
+    for scenario in scenarios:
+        file_path = os.path.join(base_path, period, f"{scenario}.csv")
+            continue
+
+        df = pd.read_csv(file_path)
+        objectives = df[objectives_names].values.astype(float)
+
+        objectives[:, 0] = np.log1p(objectives[:, 0])
+
+        objectives_norm = (objectives - objectives.min(axis=0)) / (
+                objectives.max(axis=0) - objectives.min(axis=0) + 1e-8)
+        M, K = objectives.shape
+
+        bootstrap_means = np.zeros((M, K, B))
+        for b in range(B):
+            sample_indices = np.random.choice(M, M, replace=True)
+            bootstrap_sample = objectives_norm[sample_indices, :]
+            bootstrap_means[:, :, b] = bootstrap_sample
+
+        mean_vals = bootstrap_means.mean(axis=2)
+        std_vals = bootstrap_means.std(axis=2)
+        ci_lower = np.percentile(bootstrap_means, 2.5, axis=2)
+        ci_upper = np.percentile(bootstrap_means, 97.5, axis=2)
+
+        robustness_index = std_vals.mean(axis=1)
+        mean_robustness = robustness_index.mean()
+
+        epsilon = 1e-6
+        cv_vals = std_vals / (np.abs(mean_vals) + epsilon)
+        cv_vals = np.clip(cv_vals, 0, 2.0)
+        mean_cv = np.nanmean(cv_vals)
+
+        robustness_dict[scenario] = mean_robustness
+        mean_cv_dict[scenario] = mean_cv
+
+        results_df = pd.DataFrame({'Pareto_Index': np.arange(1, M + 1),
+                                   'Robustness_Index': robustness_index})
+        for j, obj_name in enumerate(objectives_names):
+            results_df[f'{obj_name}_mean'] = mean_vals[:, j]
+            results_df[f'{obj_name}_std'] = std_vals[:, j]
+            results_df[f'{obj_name}_CV'] = cv_vals[:, j]
+            results_df[f'{obj_name}_CI_lower'] = ci_lower[:, j]
+            results_df[f'{obj_name}_CI_upper'] = ci_upper[:, j]
+
+        out_csv = os.path.join(output_dir, f"{period}_{scenario}_bootstrap_CV.csv")
+        results_df.to_csv(out_csv, index=False)
+
+    dominant_scenario = min(robustness_dict, key=robustness_dict.get)
+    dominant_summary = pd.concat([
+        dominant_summary,
+        pd.DataFrame([{
+            'Rainfall': period,
+            'Dominant_Scenario': dominant_scenario,
+            'Robustness_Index': robustness_dict[dominant_scenario],
+            'Mean_CV': mean_cv_dict[dominant_scenario]
+        }])
+    ], ignore_index=True)
+
+dominant_csv = os.path.join(output_dir, "Dominant_Scenario_Summary.csv")
+dominant_summary.to_csv(dominant_csv, index=False)
