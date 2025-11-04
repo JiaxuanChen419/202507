@@ -1,0 +1,222 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from pyswmm import Simulation, Nodes, Subcatchments, LidGroups, LidUnit
+from pymoo.algorithms.moo.nsga2 import NSGA2
+from pymoo.core.problem import ElementwiseProblem
+from pymoo.optimize import minimize
+from pymoo.visualization.scatter import Scatter
+
+class MyProblem(ElementwiseProblem):
+    def __init__(self):
+        super().__init__(n_var=80,n_obj=3,n_ieq_constr=1,xl=0.0,xu=[13570.8,20299.4,9366.6,14107.8,12741.9,15491.1,9215.9,28978.4,20407.4,16052.7,7318.2,7952.5,65725.1,7350.6,12066.5,4423.2,9781.2,3549.7,10406.0,5856.7,5684.8,14449.2,4803.2,3244.6,6844.6,4060.0,6219.7,3165.6,3051.9,8604.7,8206.7,3878.4,21714.4,12884.6,16438.5,29419.9,10292.9,6671.1,12326.6,9466.2,14847.2,4654.6,3879.2,4616.6,3094.4,3237.6,4944.6,5222.5,18728.8,17556.6,4844.5,12302.0,11476.9,4644.7,3158.2,8710.9,4304.5,20528.7,8861.5,9004.9,23416.1,12720.9,4843.2,23832.1,26305.0,12164.6,19095.8,12650.6,9686.8,3111.7,12150.4,22902.9,7640.9,7437.1,151234.9,1638.3,12885.9,19945.8,8215.0,16875.8])
+
+    def _evaluate(self, x, out, *args, **kwargs):
+        with Simulation(r'E:\PycharmProjects\pythonProject\Study\nsga\S5.inp') as sim:
+            LidGroups(sim)['S6'][0].unit_area=x[0]
+            LidGroups(sim)['S7'][0].unit_area=x[1]
+            LidGroups(sim)['S8'][0].unit_area=x[2]
+            LidGroups(sim)['S9'][0].unit_area=x[3]
+            LidGroups(sim)['S10'][0].unit_area=x[4]
+            LidGroups(sim)['S14'][0].unit_area=x[5]
+            LidGroups(sim)['S15'][0].unit_area=x[6]
+            LidGroups(sim)['S18'][0].unit_area=x[7]
+            LidGroups(sim)['S19'][0].unit_area=x[8]
+            LidGroups(sim)['S20'][0].unit_area=x[9]
+            LidGroups(sim)['S21'][0].unit_area=x[10]
+            LidGroups(sim)['S24'][0].unit_area=x[11]
+            LidGroups(sim)['S27'][0].unit_area=x[12]
+            LidGroups(sim)['S32'][0].unit_area=x[13]
+            LidGroups(sim)['S33'][0].unit_area=x[14]
+            LidGroups(sim)['S39'][0].unit_area=x[15]
+            LidGroups(sim)['S42'][0].unit_area=x[16]
+            LidGroups(sim)['S70'][0].unit_area=x[17]
+            LidGroups(sim)['S72'][0].unit_area=x[18]
+            LidGroups(sim)['S75'][0].unit_area=x[19]
+            LidGroups(sim)['S76'][0].unit_area=x[20]
+            LidGroups(sim)['S77'][0].unit_area=x[21]
+            LidGroups(sim)['S78'][0].unit_area=x[22]
+            LidGroups(sim)['S79'][0].unit_area=x[23]
+            LidGroups(sim)['S80'][0].unit_area=x[24]
+            LidGroups(sim)['S81'][0].unit_area=x[25]
+            LidGroups(sim)['S82'][0].unit_area=x[26]
+            LidGroups(sim)['S83'][0].unit_area = x[27]
+            LidGroups(sim)['S84'][0].unit_area = x[28]
+            LidGroups(sim)['S85'][0].unit_area = x[29]
+            LidGroups(sim)['S87'][0].unit_area = x[30]
+            LidGroups(sim)['S88'][0].unit_area = x[31]
+            LidGroups(sim)['S89'][0].unit_area = x[32]
+            LidGroups(sim)['S90'][0].unit_area = x[33]
+            LidGroups(sim)['S93'][0].unit_area = x[34]
+            LidGroups(sim)['S104'][0].unit_area = x[35]
+            LidGroups(sim)['S106'][0].unit_area = x[36]
+            LidGroups(sim)['S109'][0].unit_area = x[37]
+            LidGroups(sim)['S111'][0].unit_area = x[38]
+            LidGroups(sim)['S119'][0].unit_area = x[39]
+            LidGroups(sim)['S121'][0].unit_area = x[40]
+            LidGroups(sim)['S126'][0].unit_area = x[41]
+            LidGroups(sim)['S127'][0].unit_area = x[42]
+            LidGroups(sim)['S129'][0].unit_area = x[43]
+            LidGroups(sim)['S130'][0].unit_area = x[44]
+            LidGroups(sim)['S131'][0].unit_area = x[45]
+            LidGroups(sim)['S133'][0].unit_area = x[46]
+            LidGroups(sim)['S134'][0].unit_area = x[47]
+            LidGroups(sim)['S135'][0].unit_area = x[48]
+            LidGroups(sim)['S136'][0].unit_area = x[49]
+            LidGroups(sim)['S137'][0].unit_area = x[50]
+            LidGroups(sim)['S138'][0].unit_area=x[51]
+            LidGroups(sim)['S139'][0].unit_area = x[52]
+            LidGroups(sim)['S141'][0].unit_area = x[53]
+            LidGroups(sim)['S143'][0].unit_area = x[54]
+            LidGroups(sim)['S145'][0].unit_area=x[55]
+            LidGroups(sim)['S146'][0].unit_area = x[56]
+            LidGroups(sim)['S147'][0].unit_area=x[57]
+            LidGroups(sim)['S148'][0].unit_area=x[58]
+            LidGroups(sim)['S149'][0].unit_area=x[59]
+            LidGroups(sim)['S150'][0].unit_area=x[60]
+            LidGroups(sim)['S151'][0].unit_area=x[61]
+            LidGroups(sim)['S155'][0].unit_area = x[62]
+            LidGroups(sim)['S156'][0].unit_area = x[63]
+            LidGroups(sim)['S158'][0].unit_area=x[64]
+            LidGroups(sim)['S161'][0].unit_area=x[65]
+            LidGroups(sim)['S166'][0].unit_area=x[66]
+            LidGroups(sim)['S168'][0].unit_area=x[67]
+            LidGroups(sim)['S169'][0].unit_area = x[68]
+            LidGroups(sim)['S170'][0].unit_area=x[69]
+            LidGroups(sim)['S172'][0].unit_area=x[70]
+            LidGroups(sim)['S173'][0].unit_area=x[74]
+            LidGroups(sim)['S179'][0].unit_area = x[72]
+            LidGroups(sim)['S180'][0].unit_area = x[73]
+            LidGroups(sim)['S184'][0].unit_area = x[74]
+            LidGroups(sim)['S187'][0].unit_area = x[75]
+            LidGroups(sim)['S188'][0].unit_area = x[76]
+            LidGroups(sim)['S190'][0].unit_area = x[77]
+            LidGroups(sim)['S191'][0].unit_area = x[78]
+            LidGroups(sim)['S192'][0].unit_area = x[79]
+
+            for step in sim:
+                pass
+
+            lid_area=np.array(np.zeros(80))
+            lid_area[0] = LidGroups(sim)['S6'][0].unit_area
+            lid_area[1] = LidGroups(sim)['S7'][0].unit_area
+            lid_area[2] = LidGroups(sim)['S8'][0].unit_area
+            lid_area[3] = LidGroups(sim)['S9'][0].unit_area
+            lid_area[4] = LidGroups(sim)['S10'][0].unit_area
+            lid_area[5] = LidGroups(sim)['S14'][0].unit_area
+            lid_area[6] = LidGroups(sim)['S15'][0].unit_area
+            lid_area[7] = LidGroups(sim)['S18'][0].unit_area
+            lid_area[8] = LidGroups(sim)['S19'][0].unit_area
+            lid_area[9] = LidGroups(sim)['S20'][0].unit_area
+            lid_area[10] = LidGroups(sim)['S21'][0].unit_area
+            lid_area[11] = LidGroups(sim)['S24'][0].unit_area
+            lid_area[12] = LidGroups(sim)['S27'][0].unit_area
+            lid_area[13] = LidGroups(sim)['S32'][0].unit_area
+            lid_area[14] = LidGroups(sim)['S33'][0].unit_area
+            lid_area[15] = LidGroups(sim)['S39'][0].unit_area
+            lid_area[16] = LidGroups(sim)['S42'][0].unit_area
+            lid_area[17] = LidGroups(sim)['S70'][0].unit_area
+            lid_area[18] = LidGroups(sim)['S72'][0].unit_area
+            lid_area[19] = LidGroups(sim)['S75'][0].unit_area
+            lid_area[20] = LidGroups(sim)['S76'][0].unit_area
+            lid_area[21] = LidGroups(sim)['S77'][0].unit_area
+            lid_area[22] = LidGroups(sim)['S78'][0].unit_area
+            lid_area[23] = LidGroups(sim)['S79'][0].unit_area
+            lid_area[24] = LidGroups(sim)['S80'][0].unit_area
+            lid_area[25] = LidGroups(sim)['S81'][0].unit_area
+            lid_area[26] = LidGroups(sim)['S82'][0].unit_area
+            lid_area[27] = LidGroups(sim)['S83'][0].unit_area
+            lid_area[28] = LidGroups(sim)['S84'][0].unit_area
+            lid_area[29] = LidGroups(sim)['S85'][0].unit_area
+            lid_area[30] = LidGroups(sim)['S87'][0].unit_area
+            lid_area[31] = LidGroups(sim)['S88'][0].unit_area
+            lid_area[32] = LidGroups(sim)['S89'][0].unit_area
+            lid_area[33] = LidGroups(sim)['S90'][0].unit_area
+            lid_area[34] = LidGroups(sim)['S93'][0].unit_area
+            lid_area[35] = LidGroups(sim)['S104'][0].unit_area
+            lid_area[36] = LidGroups(sim)['S106'][0].unit_area
+            lid_area[37] = LidGroups(sim)['S109'][0].unit_area
+            lid_area[38] = LidGroups(sim)['S111'][0].unit_area
+            lid_area[39] = LidGroups(sim)['S119'][0].unit_area
+            lid_area[40] = LidGroups(sim)['S121'][0].unit_area
+            lid_area[41] = LidGroups(sim)['S126'][0].unit_area
+            lid_area[42] = LidGroups(sim)['S127'][0].unit_area
+            lid_area[43] = LidGroups(sim)['S129'][0].unit_area
+            lid_area[44] = LidGroups(sim)['S130'][0].unit_area
+            lid_area[45] = LidGroups(sim)['S131'][0].unit_area
+            lid_area[46] = LidGroups(sim)['S133'][0].unit_area
+            lid_area[47] = LidGroups(sim)['S134'][0].unit_area
+            lid_area[48] = LidGroups(sim)['S135'][0].unit_area
+            lid_area[49] = LidGroups(sim)['S136'][0].unit_area
+            lid_area[50] = LidGroups(sim)['S137'][0].unit_area
+            lid_area[51] = LidGroups(sim)['S138'][0].unit_area
+            lid_area[52] = LidGroups(sim)['S139'][0].unit_area
+            lid_area[53] = LidGroups(sim)['S141'][0].unit_area
+            lid_area[54] = LidGroups(sim)['S143'][0].unit_area
+            lid_area[55] = LidGroups(sim)['S145'][0].unit_area
+            lid_area[56] = LidGroups(sim)['S146'][0].unit_area
+            lid_area[57] = LidGroups(sim)['S147'][0].unit_area
+            lid_area[58] = LidGroups(sim)['S148'][0].unit_area
+            lid_area[59] = LidGroups(sim)['S149'][0].unit_area
+            lid_area[60] = LidGroups(sim)['S150'][0].unit_area
+            lid_area[61] = LidGroups(sim)['S151'][0].unit_area
+            lid_area[62] = LidGroups(sim)['S155'][0].unit_area
+            lid_area[63] = LidGroups(sim)['S156'][0].unit_area
+            lid_area[64] = LidGroups(sim)['S158'][0].unit_area
+            lid_area[65] = LidGroups(sim)['S161'][0].unit_area
+            lid_area[66] = LidGroups(sim)['S166'][0].unit_area
+            lid_area[67] = LidGroups(sim)['S168'][0].unit_area
+            lid_area[68] = LidGroups(sim)['S169'][0].unit_area
+            lid_area[69] = LidGroups(sim)['S170'][0].unit_area
+            lid_area[70] = LidGroups(sim)['S172'][0].unit_area
+            lid_area[71] = LidGroups(sim)['S173'][0].unit_area
+            lid_area[72] = LidGroups(sim)['S179'][0].unit_area
+            lid_area[73] = LidGroups(sim)['S180'][0].unit_area
+            lid_area[74] = LidGroups(sim)['S184'][0].unit_area
+            lid_area[75] = LidGroups(sim)['S187'][0].unit_area
+            lid_area[76] = LidGroups(sim)['S188'][0].unit_area
+            lid_area[77] = LidGroups(sim)['S190'][0].unit_area
+            lid_area[78] = LidGroups(sim)['S191'][0].unit_area
+            lid_area[79] = LidGroups(sim)['S192'][0].unit_area
+
+            greenarea=lid_area[0]+lid_area[1]+lid_area[2]+lid_area[3]+lid_area[4]+lid_area[5]+lid_area[6]+lid_area[7]\
+                    +lid_area[8]+lid_area[9]+lid_area[10]+lid_area[11]+lid_area[12]+lid_area[13]+lid_area[14]+lid_area[15]\
+                    +lid_area[16]+lid_area[17]+lid_area[18]+lid_area[19]+lid_area[20]+lid_area[21]+lid_area[22]+lid_area[23]\
+                    +lid_area[34]+lid_area[35]+lid_area[36]+lid_area[37]+lid_area[38]+lid_area[39]+lid_area[40]+lid_area[41]\
+                    +lid_area[42]+lid_area[43]+lid_area[44]+lid_area[45]+lid_area[46]+lid_area[47]+lid_area[48]+lid_area[49]\
+                    +lid_area[50]+lid_area[51]+lid_area[52]+lid_area[53]+lid_area[54]+lid_area[55]+lid_area[56]+lid_area[57]\
+                    +lid_area[58]+lid_area[59]+lid_area[60]+lid_area[61]+lid_area[62]+lid_area[63]+lid_area[64]+lid_area[65]\
+                    +lid_area[66]+lid_area[67]+lid_area[68]+lid_area[69]+lid_area[70]+lid_area[71]+lid_area[72]+lid_area[73]\
+                    +lid_area[74]+lid_area[75]+lid_area[76]+lid_area[77]+lid_area[78]+lid_area[79]
+
+            subcatchment_runoff=np.array(np.zeros(192))
+            for i in range(192):
+                subcatchment_runoff[i]=Subcatchments(sim)['S'+str(i+1)].statistics['runoff']/Subcatchments(sim)['S'+str(i+1)].area/10
+            R=0
+            for i in range(192):
+                R=R+subcatchment_runoff[i]
+
+            node_surcharged_duration=np.array(np.zeros(192))
+            for i in range(1,193):
+                node_surcharged_duration[i-1]=Nodes(sim)[str(i)].statistics['surcharge_duration']
+            T=np.sum(node_surcharged_duration)
+
+            Storage_green=0.1*0.8*greenarea
+            Total_storage=Storage_green
+
+            f1=450*greenarea
+            f2=R
+            f3=T
+
+            g1=Total_storage-100000
+
+            out["F"] = [f1, f2, f3]
+            out["G"] = [g1]
+            sim.close()
+
+problem=MyProblem()
+algorithm=NSGA2(pop_size=100)
+res=minimize(problem,algorithm,("n_gen",500),verbose=True,seed=1)
+print(res.exec_time)
+np.savetxt(r'F:\Results\design.txt', res.X) 
+np.savetxt(r'F:\Results\objective.txt', res.F)  
+np.savetxt(r'F:\Results\constraint.txt', res.G)  
