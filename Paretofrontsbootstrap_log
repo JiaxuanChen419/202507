@@ -19,7 +19,8 @@ for period in rain_periods:
 
     for scenario in scenarios:
         file_path = os.path.join(base_path, period, f"{scenario}.csv")
-            continue
+        if not os.path.exists(file_path):            
+        continue
 
         df = pd.read_csv(file_path)
         objectives = df[objectives_names].values.astype(float)
